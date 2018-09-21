@@ -28,8 +28,29 @@ bower install leaflet-navbar
 The default state for the control is just below the zoom control. This will allow map users to navigate forward and back in the map's view history as well as navigate to a home view.
 
 ````js
-L.control.navbar().addTo(map);
+var navbar = L.control.navbar().addTo(map);
 ````
+
+methods:
+````js
+navbar.goHome();
+````
+Go to home. Same as clicking on the home button.
+
+````js
+navbar.goBack();
+navbar.goForward();
+````
+Navigate through history. Will return false if no view is available
+to navigate to.
+
+````js
+navbar.zoomBoxOn();
+navbar.panHandOn();
+````
+Toggle between Zoom Box and Pan (default) controls.
+
+
 
 Options for initialising the Leaflet.NavBar control.
 

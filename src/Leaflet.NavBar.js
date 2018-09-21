@@ -39,15 +39,15 @@
                 container = L.DomUtil.create('div', controlName + ' leaflet-bar');
 
             // Add toolbar buttons
-            this._homeButton = this._createButton(options.homeTitle, controlName + '-home', container, this._goHome);
-            this._backButton = this._createButton(options.backTitle, controlName + '-back', container, this._goBack);
-            this._fwdButton = this._createButton(options.forwardTitle, controlName + '-fwd', container, this._goFwd);
+            this._homeButton = this._createButton(options.homeTitle, controlName + '-home', container, this.goHome);
+            this._backButton = this._createButton(options.backTitle, controlName + '-back', container, this.goBack);
+            this._fwdButton = this._createButton(options.forwardTitle, controlName + '-fwd', container, this.goFwd);
 
             if (this.options.addZoomBox) {
                 this._zoomBoxButton = this._createButton(options.zoomBoxTitle,
-                    controlName + '-zoombox', container, this._zoomBoxOn);
+                    controlName + '-zoombox', container, this.zoomBoxOn);
                 this._panButton = this._createButton(options.panHandTitle,
-                    controlName + '-panhand', container, this._panHandOn);
+                    controlName + '-panhand', container, this.panHandOn);
 
                 // panhand is active by default, so reflect this on the button state
                 this._setButtonInactive(this._zoomBoxButton);
@@ -86,7 +86,11 @@
             map.off('moveend', this._updateHistory, this);
         },
 
-        _goHome: function () {
+        goHome: function () {
+            /**
+             * if 'useBounds' is true, calls fitBounds with 'bounds'. If bounds is not set, calls fitWorld.
+             * if 'useBounds' is false, sets home map view with center and zoom
+             */
             if (this.options.useBounds) {
 
                 if (this.options.bounds) {
@@ -119,12 +123,18 @@
             return this._curIndx > 0;
         },
 
-        _goBack: function () {
+        goBack: function () {
+            /**
+             * go to previous view (or extent)
+             */
             if (this._hasBack()) {
                 this._pauseHistoryUpdate();
                 this._curIndx--;
                 this._updateDisabled();
                 this._goToNewView();
+                return true;
+            } else {
+                return false;
             }
         },
 
@@ -132,17 +142,26 @@
             return this._curIndx !== this._viewHistory.length - 1;
         },
 
-        _goFwd: function () {
+        goFwd: function () {
+            /**
+             * go to next view (or extent)
+             */
             if (this._hasFwd()) {
                 this._pauseHistoryUpdate();
                 this._curIndx++;
                 this._updateDisabled();
                 this._goToNewView();
+                return true;
+            } else {
+                return false;
             }
         },
 
 
-        _zoomBoxOn: function () {
+        zoomBoxOn: function () {
+            /**
+             * activates the zoom box control, deactivates pan control
+             */
             if (this.zoomBoxActive) {
                 // skip if already active
                 return;
@@ -158,7 +177,10 @@
             this._setButtonActive(this._zoomBoxButton);
         },
 
-        _panHandOn: function () {
+        panHandOn: function () {
+            /**
+             * activates the pan control (default map behavior), deactivates zoom box control
+             */
             if (!this.zoomBoxActive) {
                 // skip if already inactive
                 return;
