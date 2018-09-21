@@ -15,7 +15,8 @@
             zoomBoxTitle: 'Draw a box to zoom',
             panHandTitle: 'Drag to pan',
             useBounds: false, //alternatively, store bounds in the history, instead of zoom/center,
-            addZoomBox: false   // add zoombox/panhand controls
+            addZoomBox: false,   // add zoombox/panhand controls
+            callbacks: {}
         },
 
         zoomBoxActive: false,
@@ -101,6 +102,8 @@
             } else {
                 this._map.setView(this.options.center, this.options.zoom);
             }
+            this._doCallback('goHome');
+
         },
 
         _goToNewView: function () {
@@ -132,6 +135,9 @@
                 this._curIndx--;
                 this._updateDisabled();
                 this._goToNewView();
+
+                // only try callback if successful
+                this._doCallback('goBack');
                 return true;
             } else {
                 return false;
@@ -151,6 +157,9 @@
                 this._curIndx++;
                 this._updateDisabled();
                 this._goToNewView();
+
+                // only try callback if successful
+                this._doCallback('goFwd');
                 return true;
             } else {
                 return false;
@@ -175,6 +184,19 @@
             // handle css classes
             this._setButtonInactive(this._panButton);
             this._setButtonActive(this._zoomBoxButton);
+
+            this._doCallback('zoomBoxOn');
+        },
+
+        _doCallback: function (action) {
+            if (this.options.callbacks.hasOwnProperty(action)) {
+                try {
+                    this.options.callbacks[action].call();
+                } catch (e) {
+                    console.error("callback for '" + action + "' resulted in an error:");
+                    throw e;
+                }
+            }
         },
 
         panHandOn: function () {
@@ -193,6 +215,8 @@
             // handle css classes
             this._setButtonInactive(this._zoomBoxButton);
             this._setButtonActive(this._panButton);
+
+            this._doCallback('panHandOn');
         },
 
         _handleZoomBoxMouseDown: function (event) {

@@ -67,3 +67,4 @@ Options for initialising the Leaflet.NavBar control.
 | homeTitle | String | 'Go to home map view' | title text for the map home button 'Go to home map view',
 | zoomBoxTitle | String | 'Draw a box to zoom' | title text for Zoom Box button
 | panHandTitle | String | 'Drag to pan' | title text for Pan Hand button
+| callbacks | Object | {} | Key-value pair with action (ex: 'zoomBoxOn') as the key and callback function as the value
