@@ -7,6 +7,8 @@ This css file works only in the context of OGP, since it relies on a sprite incl
     clear: none;
     border: none;
     border-radius: 0;
+    margin-left: 7px;
+    margin-top: 5px;
 }
 
 .leaflet-control-navbar.leaflet-bar.leaflet-control > a {
